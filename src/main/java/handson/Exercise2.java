@@ -44,7 +44,8 @@ public class Exercise2 {
             final CompletableFuture<Customer> verifyEmailResult = customerService.verifyEmail(customerToken)
                     .toCompletableFuture();
             final Customer customer = verifyEmailResult.get();
-
+            System.out.println(customer.getEmail());
+            System.out.println(customer.getFirstName());
             LOG.info("Registered customer {}", customer);
         }
     }

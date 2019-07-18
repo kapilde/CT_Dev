@@ -1,13 +1,21 @@
 package handson.impl;
 
 import io.sphere.sdk.carts.Cart;
+import io.sphere.sdk.carts.CartDraft;
+import io.sphere.sdk.carts.LineItemDraft;
+import io.sphere.sdk.carts.commands.CartCreateCommand;
 import io.sphere.sdk.carts.commands.CartUpdateCommand;
 import io.sphere.sdk.carts.commands.updateactions.AddLineItem;
 import io.sphere.sdk.client.SphereClient;
 import io.sphere.sdk.customers.Customer;
+import io.sphere.sdk.models.DefaultCurrencyUnits;
 import io.sphere.sdk.products.ProductProjection;
+import io.sphere.sdk.products.ProductVariant;
 
+import java.util.List;
 import java.util.concurrent.CompletionStage;
+
+import com.neovisionaries.i18n.CountryCode;
 
 /**
  * This class provides operations to work with {@link Cart}s.
@@ -25,8 +33,9 @@ public class CartService extends AbstractService {
      * @return the customer creation completion stage
      */
     public CompletionStage<Cart> createCart(final Customer customer) {
-        // TODO 3.1. Create a cart
-        return null;
+    	final CartDraft cartDraft = CartDraft.of(DefaultCurrencyUnits.USD).withCountry(CountryCode.US);
+    	final CompletionStage<Cart> cart = client.execute(CartCreateCommand.of(cartDraft));
+        return cart;
     }
 
     /**
@@ -37,8 +46,13 @@ public class CartService extends AbstractService {
      * @return the cart update completion stage
      */
     public CompletionStage<Cart> addProductToCart(final ProductProjection product, final Cart cart) {
-        // TODO 3.2. Add line item to a cart
-        return null;
+    	List<ProductVariant> varientList = product.getAllVariants();
+    	 final AddLineItem lineItemDraft1 = AddLineItem.of(product.getId(), varientList.get(0).getId(), 1);
+    	 
+    	 final CartUpdateCommand cartUpdateCommand = CartUpdateCommand.of(cart, lineItemDraft1);
+    	 final CompletionStage<Cart> updatedCart = client.execute(cartUpdateCommand);
+			return updatedCart; 
+	
     }
 
     /**

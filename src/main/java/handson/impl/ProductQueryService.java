@@ -2,10 +2,14 @@ package handson.impl;
 
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.queries.CategoryQuery;
+import io.sphere.sdk.categories.queries.CategoryQueryModel;
 import io.sphere.sdk.client.SphereClient;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.queries.ProductProjectionQuery;
+import io.sphere.sdk.products.search.ProductProjectionSearch;
 import io.sphere.sdk.queries.PagedQueryResult;
+import io.sphere.sdk.queries.Query;
+import io.sphere.sdk.queries.QueryPredicate;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -26,8 +30,10 @@ public class ProductQueryService extends AbstractService {
      * @return
      */
     private CompletionStage<PagedQueryResult<Category>> findCategory(final Locale locale, final String name) {
-        // TODO 4.1 Find a category
-        return null;
+    	Query<Category> query = CategoryQuery.of().byName(locale, name);
+    	CompletionStage<PagedQueryResult<Category>> future = client.execute(query);
+    	
+        return future;
     }
 
     /**
@@ -36,8 +42,11 @@ public class ProductQueryService extends AbstractService {
      * @return Paged result of Product projections
      */
     private CompletionStage<PagedQueryResult<ProductProjection>> withCategory(final Category category) {
-        // TODO 4.2 Query a category
-        return null;
+    	//ProductProjectionSearch productProjectionSearch = ProductProjectionSearch.ofCurrent();
+    	//QueryPredicate<ProductProjection> queryPredicate = CategoryQueryModel.of().name().
+    	ProductProjectionQuery productProjectionQuery = ProductProjectionQuery.ofCurrent().withPredicates(m->m.categories().isIn(Arrays.asList(category)));
+    	CompletionStage<PagedQueryResult<ProductProjection>> result = client.execute(productProjectionQuery);
+    	return result;
     }
 
     /**

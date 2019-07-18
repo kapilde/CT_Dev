@@ -43,7 +43,7 @@ public class Exercise3 {
 
             LOG.info("Created cart {}", cart);
 
-            final ProductProjection productProjection = client.execute(ProductProjectionByKeyGet.ofCurrent("123"))
+            final ProductProjection productProjection = client.execute(ProductProjectionByKeyGet.ofCurrent("Caramel"))
                                                               .toCompletableFuture()
                                                               .join();
 
